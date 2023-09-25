@@ -10,7 +10,6 @@ export default function Card() {
          <span className="paymentHeading">
             <span className="boldText">Scan </span> the{" "}
             <span className="boldText">QR Code</span> and complete the payment
-            Machine
          </span>
          <div className="paymentContent">
             <img

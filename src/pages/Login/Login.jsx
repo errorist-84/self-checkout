@@ -113,20 +113,29 @@ function CountrySelect() {
       { value: "+61", label: "Australia", flag: <AU /> },
    ];
 
-   const [selectedCountry, setSelectedCountry] = useState(options[0]); // Set the initial selected country
-
+   const [selectedCountry, setSelectedCountry] = useState(); // Set the initial selected country
    function handleCountryChange(selectedOption) {
       setSelectedCountry(selectedOption);
    }
 
+   function formatOptionLabel({ label, flag }) {
+      return (
+         <>
+            {flag}
+            {label}
+         </>
+      );
+   }
+
    return (
       <div className="select-div">
-         <selectedCountry.flag />
          <Select
             options={options}
             value={selectedCountry}
             onChange={handleCountryChange}
+            formatOptionLabel={formatOptionLabel}
             className="country-select"
+            isSearchable={false}
          />
       </div>
    );
