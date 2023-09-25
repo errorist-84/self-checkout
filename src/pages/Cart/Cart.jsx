@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
 import "./cartStyles.css";
 import CartImg from "./cartImg.gif";
-import BagImg from "../../assets/carryBag.png";
+import BagImg from "../../assets/carryBag2.svg";
 import { BiReceipt } from "react-icons/bi";
 import { BsFillBagPlusFill } from "react-icons/bs";
+import { RxCross1 } from "react-icons/rx";
 import { useStepContext } from "../../contexts/StepContext";
 import { useCartContext } from "../../contexts/CartContext";
 import { useEffect, useState } from "react";
@@ -16,86 +17,49 @@ export default function Cart() {
 
    return (
       <>
-         {!openCarryBag && (
-            <div className="cart-container">
-               <div className={"cart-left" + (emptyCart ? " empty" : "")}>
-                  <div className="item-list">
-                     {cartItems.map((item) => (
+         <div className="cart-container">
+            <div className={"cart-left" + (emptyCart ? " empty" : "")}>
+               <div className="item-list">
+                  {!emptyCart &&
+                     cartItems.map((item) => (
                         <ProductTile key={item.id} item={item} />
                      ))}
-                     {emptyCart && (
-                        <div className="empty-cart">
-                           <span
-                              style={{ fontSize: "27px", marginTop: "30px" }}
-                           >
-                              Welcome to{" "}
-                              <span style={{ fontWeight: "600" }}>
-                                 KPMG Retail, CyberHub
-                              </span>
+                  {emptyCart && (
+                     <div className="empty-cart">
+                        <span style={{ fontSize: "27px", marginTop: "30px" }}>
+                           Welcome to{" "}
+                           <span style={{ fontWeight: "600" }}>
+                              KPMG Retail, CyberHub
                            </span>
-                           <img
-                              style={{ height: "70%" }}
-                              src={CartImg}
-                              alt="add-to-basket"
-                              onClick={fetchCartItems}
-                           />
-                           <span>
-                              Your cart is <b>empty</b>. Please <b>scan</b> your
-                              items to add them here.
-                           </span>
-                        </div>
-                     )}
-                  </div>
-               </div>
-               <div className="cart-right">
-                  {showPaymentOpts && !emptyCart ? (
-                     <PaymentOpts />
-                  ) : (
-                     <OrderSummary setOpenCarryBag={setOpenCarryBag} />
+                        </span>
+                        <img
+                           style={{ height: "70%" }}
+                           src={CartImg}
+                           alt="add-to-basket"
+                           onClick={fetchCartItems}
+                        />
+                        <span>
+                           Your cart is <b>empty</b>. Please <b>scan</b> your
+                           items to add them here.
+                        </span>
+                     </div>
                   )}
                </div>
             </div>
-         )}
-         {openCarryBag && (
-            <div className="carry-bag-popup">
-               <span className="carry-bag-title">Please select Carry Bags</span>
-               <div className="carry-bag-item-outer">
-                  <div className="carry-bag-item-inner">
-                     <img
-                        style={{ height: "150px" }}
-                        src={BagImg}
-                        alt="carry-bag"
-                     />
-                     <span className="carry-bag-price">₹ 5</span>
-                  </div>
-                  <span>Small Bags: {cbCount[0]}</span>
-               </div>
-               <div className="carry-bag-item-outer">
-                  <div className="carry-bag-item-inner">
-                     <div>
-                        <img
-                           style={{ height: "200px" }}
-                           src={BagImg}
-                           alt="carry-bag"
-                        />
-                        <span className="carry-bag-price">₹ 15</span>
-                     </div>
-                     <span>Medium Bags: {cbCount[1]}</span>
-                  </div>
-                  <div className="carry-bag-item-outer">
-                     <div className="carry-bag-item-inner">
-                        <img
-                           style={{ height: "250px" }}
-                           src={BagImg}
-                           alt="carry-bag"
-                        />
-                        <span className="carry-bag-price">₹ 25</span>
-                     </div>
-                     <span>Large Bags: {cbCount[2]}</span>
-                  </div>
-               </div>
-               <button style={{ margin: "20px" }}>CLOSE</button>
+            <div className="cart-right">
+               {showPaymentOpts && !emptyCart ? (
+                  <PaymentOpts />
+               ) : (
+                  <OrderSummary setOpenCarryBag={setOpenCarryBag} />
+               )}
             </div>
+         </div>
+         {openCarryBag && (
+            <AddCarryBag
+               cbCount={cbCount}
+               setCbCount={setCbCount}
+               setOpenCarryBag={setOpenCarryBag}
+            />
          )}
       </>
    );
@@ -208,7 +172,7 @@ function OrderSummary({ setOpenCarryBag }) {
                Please click here to add a carry bag
             </span>
             <button
-               disabled={emptyCart}
+               // disabled={emptyCart}
                className="notif-button"
                onClick={() => setOpenCarryBag(true)}
             >
@@ -365,5 +329,110 @@ function PayOptTile({ name, offer, isSelected, onClick }) {
             </span>
          )}
       </label>
+   );
+}
+
+function AddCarryBag({ cbCount, setCbCount, setOpenCarryBag }) {
+   const carryBagData = [
+      {
+         name: "Small",
+         price: 5,
+         width: "120px",
+         count: cbCount[0],
+      },
+      {
+         name: "Medium",
+         price: 15,
+         width: "200px",
+         count: cbCount[1],
+      },
+      {
+         name: "Large",
+         price: 25,
+         width: "250px",
+         count: cbCount[2],
+      },
+   ];
+
+   function incrementCount(index) {
+      let temp = [...cbCount];
+      temp[index] += 1;
+      setCbCount(temp);
+   }
+
+   function decrementCount(index) {
+      if (cbCount[index] === 0) return;
+      let temp = [...cbCount];
+      temp[index] -= 1;
+      setCbCount(temp);
+   }
+
+   return (
+      <div className="popupContainer" onClick={() => setOpenCarryBag(false)}>
+         <div
+            className="carry-bag-popup"
+            onClick={(event) => event.stopPropagation()}
+         >
+            <div
+               style={{
+                  display: "flex",
+                  width: "90%",
+                  marginTop: "20px",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+               }}
+            >
+               <span
+                  style={{
+                     fontSize: "30px",
+                     fontWeight: "300px",
+                  }}
+                  className="carry-bag-title"
+               >
+                  Need a Carry Bag?
+               </span>
+               <RxCross1 size={30} onClick={() => setOpenCarryBag(false)} />
+            </div>
+
+            <div className="carry-bag-allItems">
+               {carryBagData.map((bag, index) => (
+                  <div className="carry-bag-item">
+                     <img
+                        src={BagImg}
+                        style={{ height: bag.width, marginBottom: "20px" }}
+                        onClick={() => incrementCount(index)}
+                     />
+                     <div
+                        style={{
+                           display: "flex",
+                           justifyContent: "space-evenly",
+                           alignItems: "center",
+                        }}
+                     >
+                        <button
+                           className="quantButton"
+                           onClick={() => incrementCount(index)}
+                        >
+                           +
+                        </button>
+                        <button
+                           className="quantButton"
+                           onClick={() => decrementCount(index)}
+                        >
+                           -
+                        </button>
+                     </div>
+                     <span style={{ fontSize: "25px" }}>
+                        {bag.name} <b>x{bag.count}</b>
+                     </span>
+                     <span>
+                        <b>₹{bag.price}</b>.
+                        <span style={{ fontSize: "12px" }}>00</span> per bag
+                     </span>
+                  </div>
+               ))}
+            </div>
+         </div>
+      </div>
    );
 }

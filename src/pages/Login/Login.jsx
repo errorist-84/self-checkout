@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import Select from "react-select";
+import { IN, US, GE, RU, FR, UA, AU } from "country-flag-icons/react/3x2";
 import "./loginStyles.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -101,30 +103,31 @@ export default function Login() {
 }
 
 function CountrySelect() {
-   // mock data: {flag: "", value: "", label: ""}
    const options = [
-      { flag: "", value: "+91", label: "IND" },
-      { flag: "", value: "+1", label: "USA" },
-      { flag: "", value: "+44", label: "UK" },
-      { flag: "", value: "+971", label: "UAE" },
-      { flag: "", value: "+65", label: "SNG" },
-      { flag: "", value: "+60", label: "MAL" },
-      { flag: "", value: "+61", label: "AUS" },
+      { value: "+91", label: "India", flag: <IN /> },
+      { value: "+1", label: "USA", flag: <US /> },
+      { value: "+44", label: "Germany", flag: <GE /> },
+      { value: "+7", label: "Russia", flag: <RU /> },
+      { value: "+33", label: "France", flag: <FR /> },
+      { value: "+380", label: "Ukraine", flag: <UA /> },
+      { value: "+61", label: "Australia", flag: <AU /> },
    ];
-   const [country, setCountry] = useState("+91");
-   function handleChange(e) {
-      setCountry(e.target.value);
+
+   const [selectedCountry, setSelectedCountry] = useState(options[0]); // Set the initial selected country
+
+   function handleCountryChange(selectedOption) {
+      setSelectedCountry(selectedOption);
    }
 
    return (
       <div className="select-div">
-         <select>
-            {options.map((option) => (
-               <option key={option.value} value={option.value}>
-                  {option.label}
-               </option>
-            ))}
-         </select>
+         <selectedCountry.flag />
+         <Select
+            options={options}
+            value={selectedCountry}
+            onChange={handleCountryChange}
+            className="country-select"
+         />
       </div>
    );
 }

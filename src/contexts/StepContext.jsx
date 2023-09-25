@@ -1,8 +1,6 @@
-import { createContext, useState } from "react";
-// import { useCartContext } from "./CartContext";
-import { useNavigate } from "react-router-dom";
+import { createContext } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useContext } from "react";
-import { useLocation } from "react-router-dom";
 
 const StepContext = createContext();
 
@@ -14,7 +12,6 @@ export default function StepProvider({ children }) {
    const pagesURL = ["/", "/login", "/cart", "/payment", "/feedback"];
    const navigate = useNavigate();
    const location = useLocation();
-   // const { setEmptyCart } = useCartContext();
 
    const currentStep = pagesURL.indexOf(location.pathname);
 
@@ -32,17 +29,11 @@ export default function StepProvider({ children }) {
       }
    }
 
-   function handleExit() {
-      navigate(pagesURL[0]);
-      // setEmptyCart(true);
-   }
-
    const contextValue = {
       step: currentStep,
       pages: pagesURL,
       handlePrev,
       handleNext,
-      handleExit,
    };
 
    return (

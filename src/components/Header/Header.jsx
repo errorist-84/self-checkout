@@ -3,9 +3,19 @@ import kpmgLogo from "../../assets/KPMG_logo.svg";
 import ProgressBar from "../ProgressBar/ProgressBar";
 import DateTime from "../DateTime";
 import { useStepContext } from "../../contexts/StepContext";
+import { useNavigate } from "react-router-dom";
+import { useCartContext } from "../../contexts/CartContext";
 
 export default function Header() {
-   const { step, handleExit } = useStepContext();
+   const { step, pages } = useStepContext();
+   const { setEmptyCart } = useCartContext();
+   const navigate = useNavigate();
+
+   function handleExit() {
+      navigate(pages[0]);
+      setEmptyCart(true);
+   }
+
    return (
       <div className={styles.header}>
          <img src={kpmgLogo} alt="logo" style={{ width: "150px" }} />
